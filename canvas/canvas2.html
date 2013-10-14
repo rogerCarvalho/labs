@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Canvas Animacion</title>
+	<style>
+			*{ margin: 0; padding: 0;}
+			html, body{ width: 100%; height: 100%;}
+			#mainCanvas{ background: #111; color: #000; display: block; }
+
+	</style>
+	<script src="stats/src/Stats.js"></script>
+</head>
+<body>
+	<canvas id="mainCanvas" ></canvas>
+	<script>
+		var fps = 60;
+		var time = 0;
+		var twoPi = Math.PI*2;
+		var way = 1;
+		var speed = 5;
+		var accel = 0;
+
+
+		window.requestAnimFrame = (function(callback){
+			return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback){
+					window.setTimeout(callback, 1000 / fps);
+			};
+		})();
+
+		function makeCircle(paramObj, context){
+			context.beginPath();
+			context.arc(paramObj.x, paramObj.y, paramObj.radius, paramObj.startAngle, paramObj.endAngle);
+			context.fillStyle = '#456789';
+			context.fill();
+		}
+
+		function draw(paramObj, context){
+			makeCircle(paramObj, context);
+		}
+
+		var mouseVarPos = 0;
+
+		
+		function animate(){
+			
+
+			// update
+			time++;
+			var amplitude = 50;
+			var period = 180;
+			var centerX = canvas.height/2 - circ.radius/2;
+			speed = speed+accel;
+			var nextX = (amplitude * Math.sin(time * twoPi / period ))*speed + centerX;
+			//circ.x = calculate(canvas.width, circ.x);
+			circ.y = circ2.y = nextX;
+			circ.x = mouseVarPos + 100;
+			circ2.x = mouseVarPos -100
+			
+
+
+			//clear
+			c.clearRect(0, 0, canvas.width, canvas.height);
+
+			//draw stuff
+			draw(circ, c);
+			draw(circ2, c);
+
+			//request new frame
+			
+		}
+		var canvas = document.getElementById('mainCanvas');
+		var c = canvas.getContext("2d");
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		canvas.addEventListener('mousemove',function(e){
+			var borda = canvas.getBoundingClientRect();
+			mouseVarPos = e.clientX - borda.left;
+		});
+
+		var circ = {
+			x: 100,
+			y: 150,
+			radius: 5,
+			startAngle: 0,
+			endAngle: twoPi
+		};
+		var circ2 = {
+			x: 150,
+			y: 150,
+			radius: 5,
+			startAngle: 0,
+			endAngle: twoPi
+		};
+		
+		time = circ.x;
+		window.onload =	animate();			
+
+
+		
+		var stats = new Stats();
+		stats.domElement.style.position = 'absolute';
+		stats.domElement.style.left = '0px';
+		stats.domElement.style.top = '0px';
+
+		document.body.appendChild( stats.domElement );
+
+		setInterval( function () {
+
+		    stats.begin();
+
+		    // your code goes here
+		    requestAnimFrame(function(){ 
+		    	console.log(time);
+		    	animate(); });
+
+		    stats.end();
+
+		}, 1000 / fps );
+	</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Particle Animacion</title>
+	<style>
+			*{ margin: 0; padding: 0;}
+			html, body{ width: 100%; height: 100%;}
+			#mainCanvas{ background: #111; color: #000; display: block; }
+
+	</style>
+	<script src="stats/src/Stats.js"></script>
+</head>
+<body>
+	<canvas id="mainCanvas" ></canvas>
+	<script>
+
+		var canvas = document.getElementById('mainCanvas');
+		var c = canvas.getContext("2d");
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+		var cw = canvas.width;
+		var ch = canvas.height;
+
+		
+
+		window.requestAnimFrame = (function(callback){
+			return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback){
+					window.setTimeout(callback, 1000 / 60);
+			};
+		})();
+
+		// var globals
+
+		var twoPi = Math.PI*2;
+		var angleSpeed = 0.1;
+		var verticalSpeed = 1;
+		var particleSize = 1;
+		var widthFactor = 10;
+		var numParticles = 350;
+
+
+		var Particle = function(){
+			this.h = Math.floor(ch*Math.random()); // posiciona randomicamente o y
+			this.angle = Math.random() * twoPi;
+			this.color = "#456789";
+ 		};
+
+ 		Particle.prototype.draw = function(id){
+ 			
+ 			this.angle += angleSpeed; // posicao horizontal
+ 			this.h -= verticalSpeed; // posicao vertical
+
+ 			if(this.h < 0 || this.h > ch){
+ 				this.h = Math.floor(ch * Math.random()); // controla aposição vertical se o elemento não for aparecer no canvas
+ 			};
+
+ 			c.beginPath();
+ 			c.fillStyle = this.color;
+ 			var sizeFactor = 0.5 + (Math.sin(this.angle)+1)/2; // fator do tamanho pra dar a sensação de profundidade, usou o seno q varia de -1 a 1, portanto na equação o valor varia de 0.5 a 1.5
+ 			var posx = cw/2 + Math.cos(this.angle) * (ch - this.h) / widthFactor // posicao x, usa o coseno para indicar o sentido, sendo 0 o meio do canvas [cw/2], quando mais alto o valor do y da paticula (ou seja, quando mais perto do bottom) menor a variação de x.
+ 			var myr =  sizeFactor * particleSize;
+ 			console.log(this.h);
+ 			c.arc(posx, this.h, myr, 0, twoPi);
+ 			c.fill();
+ 		};
+
+ 		var ParticleSystem = function(){
+ 			this.particles = [];
+ 			for(var i = 0; i < numParticles; i++) {
+ 				this.particles.push(new Particle( ch * Math.random()));
+ 			};
+ 		};
+
+ 		ParticleSystem.prototype.draw = function() {
+ 			for (var i = 0; i < this.particles.length; i++) {
+ 				this.particles[i].draw();
+ 			};
+ 		};
+
+		var particleSystem = new ParticleSystem();
+
+		function drawAll(){
+			
+
+			// update
+			
+			//clear
+			c.clearRect(0, 0, cw, ch);
+
+			//draw stuff
+			particleSystem.draw();
+			
+			
+		};
+
+		function clearContext(){
+			c.fillStyle = "rgba(0,0,0,0.2)";
+			c.fillRect(0, 0, cw, ch);
+		}
+
+
+		var stats = new Stats();
+		stats.domElement.style.position = 'absolute';
+		stats.domElement.style.left = '0px';
+		stats.domElement.style.top = '0px';
+
+		document.body.appendChild( stats.domElement );
+
+		  (function animate(){
+		  		stats.begin();
+		    	requestAnimFrame(animate);
+		    	//c.clearRect(0, 0, cw, ch);
+		    	//clearContext();
+
+			//draw stuff
+			particleSystem.draw();
+		    	stats.end();
+		 })();
+
+		    
+
+		/*setInterval( function () {
+
+		    stats.begin();
+
+		    // your code goes here
+		  //  (function animate(){
+		    //	requestAnimFrame(animate);
+		    	drawAll();
+		   // })();
+
+		    stats.end();
+
+		}, 1000 / 60 );*/
+	</script>
+</body>
+</html>
