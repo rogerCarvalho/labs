@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>First attempt</title>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+</head>
+<body>
+	<script>
+		var theData = [1,2,3];
+
+		var p = d3.select("body").selectAll("p")
+			.data(theData)
+			.enter()
+			.append("p")
+			.text(function(d){ return d;});
+
+		var circleRadii = [40, 20, 10];
+
+		var svgContainer = d3.select("body").append("svg")
+											.attr("width", 200)
+											.attr("height", 200);
+		var circles = svgContainer.selectAll("circle")
+								.data(circleRadii)
+								.enter()
+								.append("circle");
+		var cicleAttributes = circles
+							.attr("cx",50)
+							.attr("cy",50)
+							.attr("r", function(d){ return d;})
+							.style("fill", function(d){
+								var returnColor;
+								if(d === 40) returnColor ="green";
+								else if(d ===20) returnColor = "purple";
+								else if( d===10) returnColor = "red";
+								return returnColor;
+							});
+	</script>
+</body>
+</html>

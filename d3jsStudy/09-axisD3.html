@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>09- Axis D3</title>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+</head>
+<body>
+	<script>
+		var circleData = [
+			{"cx":20, "cy": 20, "radius":20, "color": "green"},
+			{"cx":70, "cy": 70, "radius":20, "color": "purple"}
+		];
+
+		var svgContainer = d3.select("body").append("svg")
+											.attr("width", 400)
+											.attr("height", 200);
+		
+		var axisScale = d3.scale.linear()
+								.domain([0, 100])
+								.range([0, 400]);
+
+		var xAxis = d3.svg.axis()
+							.scale(axisScale);
+
+		var xAxisGroup = svgContainer.append("g")
+									.call(xAxis);
+
+	</script>
+</body>
+</html>
