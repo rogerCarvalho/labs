@@ -1,4 +1,4 @@
-// include lib/vector.js lib
+// include lib/vector.0.1.js lib
 var particle = {
 	position: null,
 	velocity: null,
