@@ -1,1 +1,6 @@
+O que fazer:
+Receber o jSon do Delicious e criar um gráfico:
+1 - Numero de links com cada tag
+2 - 
+
 http://feeds.delicious.com/v2/json/tags/utgardloki
